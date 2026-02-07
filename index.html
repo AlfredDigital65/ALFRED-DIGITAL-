@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfred Service - Services Numériques Premium</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        
+        :root {
+            --primary: #0a0a1a;
+            --secondary: #1a1a2e;
+            --accent: #00d9ff;
+            --accent-dark: #0099cc;
+            --accent-light: #66e6ff;
+            --text: #ffffff;
+            --text-secondary: #b3b3cc;
+            --card-bg: rgba(26, 26, 46, 0.7);
+            --card-border: rgba(0, 217, 255, 0.3);
+            --success: #00ffaa;
+            --glow: 0 0 15px rgba(0, 217, 255, 0.7);
+            --glow-light: 0 0 8px rgba(0, 217, 255, 0.4);
+        }
+
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 217, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 217, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(26, 26, 46, 0.8) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        
+        .background-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background-color: var(--accent-light);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(20px); }
+            50% { transform: translateY(-40px) translateX(0); }
+            75% { transform: translateY(-20px) translateX(-20px); }
+            100% { transform: translateY(0) translateX(0); }
+        }
+
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+       
+        header {
+            padding: 30px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: var(--glow);
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        .logo::before, .logo::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--accent));
+            border-radius: 2px;
+        }
+
+        .logo::before {
+            left: -70px;
+        }
+
+        .logo::after {
+            right: -70px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            background-color: rgba(10, 10, 26, 0.8);
+            border-radius: 50px;
+            padding: 10px;
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link {
+            padding: 12px 25px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text);
+            background-color: var(--accent-dark);
+            box-shadow: var(--glow-light);
+        }
+
+        
+        section {
+            margin-bottom: 70px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: var(--accent);
+            position: relative;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            border-radius: 2px;
+        }
+
+        .section-title i {
+            margin-right: 15px;
+            font-size: 1.8rem;
+        }
+
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .service-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow);
+            border-color: var(--accent);
+        }
+
+        .service-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-right: 15px;
+        }
+
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .service-price {
+            color: var(--success);
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-price i {
+            margin-right: 10px;
+        }
+
+        .service-details {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .service-features {
+            list-style-type: none;
+            margin-top: 15px;
+        }
+
+        .service-features li {
+            padding: 5px 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .portfolio-item {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow);
+        }
+
+        .portfolio-img {
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-dark), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text);
+        }
+
+        .portfolio-content {
+            padding: 20px;
+        }
+
+        .portfolio-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+       
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--glow-light);
+        }
+
+        .contact-icon {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-right: 20px;
+            width: 50px;
+            text-align: center;
+        }
+
+        .contact-text h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .contact-text p {
+            color: var(--text-secondary);
+        }
+
+        
+        .contact-form {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--card-border);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(10, 10, 26, 0.7);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: var(--glow-light);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+            color: var(--primary);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--glow);
+        }
+
+        .btn-submit i {
+            margin-right: 10px;
+        }
+
+        
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+        }
+
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-shadow: var(--glow-light);
+        }
+
+        
+        @media (max-width: 768px) {
+            .services-grid, .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                margin: 5px;
+                padding: 10px 20px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .logo::before, .logo::after {
+                width: 30px;
+            }
+            
+            .logo::before {
+                left: -40px;
+            }
+            
+            .logo::after {
+                right: -40px;
+            }
+        }
+
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="background-effects" id="particles"></div>
+
+    <div class="container">
+       
+        <header>
+            <div class="logo-container">
+                <h1 class="logo">ALFRED <span>SERVICE</span></h1>
+            </div>
+            <p class="tagline">Services numériques premium pour votre succès en ligne</p>
+            
+            <div class="nav-container">
+                <div class="nav-links">
+                    <a href="#services" class="nav-link active"><i class="fas fa-concierge-bell"></i> Services</a>
+                    <a href="#portfolio" class="nav-link"><i class="fas fa-gem"></i> Réalisations</a>
+                    <a href="#contact" class="nav-link"><i class="fas fa-address-card"></i> Contact</a>
+                </div>
+            </div>
+        </header>
+
+        
+        <section id="services" class="visible">
+            <h2 class="section-title"><i class="fas fa-star"></i> NOS SERVICES</h2>
+            
+            
+            <div class="service-card fade-in-up">
+                <div class="service-header">
+                    <div class="service-icon"><i class="fas fa-film"></i></div>
+                    <h3 class="service-title">🎬 Abonnements Premium</h3>
+                </div>
+                <p class="service-details">Accédez aux meilleures plateformes de streaming avec nos abonnements premium</p>
+                
+                <div class="service-price"><i class="fas fa-tags"></i> Netflix Premium</div>
+                <div class="service-price"><i class="fas fa-satellite-dish"></i> IPTV (chaînes du monde entier)</div>
+                
+                <ul class="service-features">
+                    <li>1 mois : 3 000 FCFA</li>
+                    <li>2 mois : 5 000 FCFA</li>
+                    <li>Illimité : 16 000 FCFA</li>
+                </ul>
+            </div>
+
+            
+            <div class="services-grid">
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3 class="service-title">🔐 VPN & Fichiers de Configuration</h3>
+                    </div>
+                    <p class="service-details">Création de fichiers VPN APK pour une navigation sécurisée</p>
+                    
+                    <ul class="service-features">
+                        <li>1 semaine : 500 FCFA</li>
+                        <li>2 semaines : 1 000 FCFA</li>
+                        <li>1 mois : 1 500 FCFA</li>
+                    </ul>
+                    
+                    <p class="service-details" style="margin-top: 15px;"><strong>Applications prises en charge :</strong></p>
+                    <p class="service-details">NetMod · ZI VPN · SSC · Dark Tunnel · HTTP Injector · HTTP Custom · autres</p>
+                    
+                    <p class="service-details" style="margin-top: 15px;"><strong>Configurations disponibles :</strong></p>
+                    <p class="service-details">🇧🇫 Burkina Faso | 🇧🇯 Bénin | 🇨🇬 Congo | 🇨🇮 Côte d'Ivoire | 🇨🇲 Cameroun | 🇲🇬 Madagascar | 🇬🇭 Ghana | 🇬🇳 Guinée | autres pays</p>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-unlock-alt"></i></div>
+                        <h3 class="service-title">⭐ Déblocage d'Applications Premium</h3>
+                    </div>
+                    <p class="service-details">Accédez aux versions premium de vos applications préférées</p>
+                    
+                    <ul class="service-features">
+                        <li>Canva Premium : 3 000 FCFA</li>
+                        <li>CapCut Premium : 2 500 FCFA</li>
+                        <li>Telegram Premium : 2 500 FCFA</li>
+                        <li>Spotify Premium : 2 000 FCFA</li>
+                        <li>Autres applications premium : sur demande</li>
+                    </ul>
+                </div>
+
+              
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-ad"></i></div>
+                        <h3 class="service-title">🚫 Blocage de Publicités</h3>
+                    </div>
+                    <p class="service-details">Suppression des publicités sur applications, navigateurs et APK</p>
+                    
+                    <div class="service-price"><i class="fas fa-money-bill-wave"></i> 2 000 FCFA</div>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-server"></i></div>
+                        <h3 class="service-title">🖥️ VPS & Formations</h3>
+                    </div>
+                    <p class="service-details">Vente de VPS et formations complètes</p>
+                    
+                    <ul class="service-features">
+                        <li>Formation complète à l'utilisation des VPS : 17 500 FCFA</li>
+                        <li>Formation Pass TikTok (configuration & optimisation)</li>
+                        <li>1 mois : 1 000 FCFA</li>
+                        <li>Illimité : 6 000 FCFA</li>
+                    </ul>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-robot"></i></div>
+                        <h3 class="service-title">🎥 Formation Google VEO 3 & Création Visuelle</h3>
+                    </div>
+                    <p class="service-details">Maîtrisez l'IA de création visuelle de Google</p>
+                    
+                    <ul class="service-features">
+                        <li>Formation Google VEO 3</li>
+                        <li>Création de prompts professionnels</li>
+                        <li>Création d'affiches professionnelles</li>
+                    </ul>
+                    
+                    <div class="service-price"><i class="fas fa-gift"></i> Pack complet : 7 500 FCFA</div>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-credit-card"></i></div>
+                        <h3 class="service-title">💳 Services Numériques Avancés</h3>
+                    </div>
+                    
+                    <ul class="service-features">
+                        <li>Création de cartes bancaires virtuelles : 6 000 FCFA</li>
+                        <li>Fourniture de numéros virtuels (SMS / vérification) : 7 000 FCFA</li>
+                    </ul>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-globe"></i></div>
+                        <h3 class="service-title">🌐 Création de Sites Web</h3>
+                    </div>
+                    <p class="service-details">Sites web professionnels et modernes</p>
+                    
+                    <ul class="service-features">
+                        <li>Sites vitrines</li>
+                        <li>Sites pour services digitaux</li>
+                        <li>Design moderne & responsive (mobile & PC)</li>
+                    </ul>
+                    
+                    <div class="service-price"><i class="fas fa-laptop-code"></i> 10 000 FCFA</div>
+                </div>
+
+                
+                <div class="service-card fade-in-up">
+                    <div class="service-header">
+                        <div class="service-icon"><i class="fas fa-tools"></i></div>
+                        <h3 class="service-title">🛠️ Autres Services Digitaux</h3>
+                    </div>
+                    
+                    <ul class="service-features">
+                        <li>Assistance & conseils personnalisés</li>
+                        <li>Services digitaux sur mesure</li>
+                        <li>Monétisation TikTok : 3 000 FCFA</li>
+                        <li>Monétisation YouTube : 5 000 FCFA</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+       
+        <section id="portfolio">
+            <h2 class="section-title"><i class="fas fa-gem"></i> MES ŒUVRES / RÉALISATIONS</h2>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item fade-in-up">
+                    <div class="portfolio-img">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Logo ALFRED SERVICE</h3>
+                        <p>Création de logo professionnel et moderne pour entreprise digitale.</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item fade-in-up">
+                    <div class="portfolio-img">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Affiches promotionnelles</h3>
+                        <p>Design d'affiches marketing pour services numériques (Telegram Premium, IPTV, etc.).</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item fade-in-up">
+                    <div class="portfolio-img">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Configuration & services digitaux</h3>
+                        <p>Services de configuration IPTV, VPN et autres services numériques divers.</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item fade-in-up">
+                    <div class="portfolio-img">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3 class="portfolio-title">Design graphique</h3>
+                        <p>Création de logos professionnels, bannières pour réseaux sociaux et affiches publicitaires.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="contact">
+            <h2 class="section-title"><i class="fas fa-address-card"></i> CONTACT</h2>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item fade-in-up">
+                        <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="contact-text">
+                            <h3>Téléphone</h3>
+                            <p>+226 65 39 78 42</p>
+                            <p>+226 71 79 55 06</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item fade-in-up">
+                        <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="contact-text">
+                            <h3>Email</h3>
+                            <p>digitalalfred1@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item fade-in-up">
+                        <div class="contact-icon"><i class="fas fa-clock"></i></div>
+                        <div class="contact-text">
+                            <h3>Disponibilité</h3>
+                            <p>Lundi - Dimanche: 8h - 22h</p>
+                            <p>Réponse sous 24h maximum</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form fade-in-up">
+                    <form id="messageForm">
+                        <div class="form-group">
+                            <label for="name">Votre nom</label>
+                            <input type="text" id="name" class="form-control" placeholder="Votre nom complet" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Votre email</label>
+                            <input type="email" id="email" class="form-control" placeholder="Votre adresse email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Votre téléphone (optionnel)</label>
+                            <input type="text" id="phone" class="form-control" placeholder="Votre numéro de téléphone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="service">Service intéressé</label>
+                            <select id="service" class="form-control">
+                                <option value="">Sélectionnez un service</option>
+                                <option value="abonnements">Abonnements Premium</option>
+                                <option value="vpn">VPN & Configurations</option>
+                                <option value="deblocage">Déblocage d'Applications</option>
+                                <option value="publicites">Blocage de Publicités</option>
+                                <option value="vps">VPS & Formations</option>
+                                <option value="veo">Formation Google VEO 3</option>
+                                <option value="cartes">Cartes Bancaires Virtuelles</option>
+                                <option value="sites">Création de Sites Web</option>
+                                <option value="autres">Autres Services</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Votre message</label>
+                            <textarea id="message" class="form-control" placeholder="Décrivez votre demande en détails..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i> Envoyer le message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+      
+        <footer>
+            <div class="footer-logo">ALFRED SERVICE</div>
+            <p>Services numériques premium • Expert en solutions digitales</p>
+            <p style="margin-top: 15px;">&copy; 2026 Alfred Service. Tous droits réservés.</p>
+        </footer>
+    </div>
+
+    
+    <a href="https://wa.me/22665397842?text=Bonjour%20Alfred%20Service,%20je%20suis%20intéressé%20par%20vos%20services" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particlesCount = 30;
+            
+            for (let i = 0; i < particlesCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                
+                const size = Math.random() * 10 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                
+                const duration = Math.random() * 20 + 15;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                // Digital crew 243
+                particle.style.opacity = Math.random() * 0.1 + 0.05;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            
+            const sections = document.querySelectorAll('section');
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+            
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                   
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    
+                    this.classList.add('active');
+                    
+                   
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            
+            const messageForm = document.getElementById('messageForm');
+            messageForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const service = document.getElementById('service').value;
+                const message = document.getElementById('message').value;
+                
+                
+                const subject = `Nouveau message de ${name} - Service: ${service || 'Non spécifié'}`;
+                const body = `Nom: ${name}%0D%0AEmail: ${email}%0D%0ATéléphone: ${phone || 'Non fourni'}%0D%0AService intéressé: ${service || 'Non spécifié'}%0D%0A%0D%0AMessage:%0D%0A${message}`;
+                
+                
+                window.open(`mailto:digitalalfred1@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+                
+                
+                alert('Votre message a été préparé. Une fenêtre de composition d\'email va s\'ouvrir. Il vous suffit de cliquer sur "Envoyer".');
+                
+                
+                messageForm.reset();
+            });
+            
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                const sections = document.querySelectorAll('section');
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            
+            const serviceCards = document.querySelectorAll('.service-card, .portfolio-item');
+            serviceCards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    this.style.setProperty('--mouse-x', `${x}px`);
+                    this.style.setProperty('--mouse-y', `${y}px`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
