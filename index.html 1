@@ -1,0 +1,114 @@
+<section id="services" class="visible">
+    <h2 class="section-title"><i class="fas fa-star"></i> NOS SERVICES</h2>
+    
+    <div class="services-grid">
+        <!-- Abonnements Premium -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-film"></i></div>
+                <h3 class="service-title">🎬 Abonnements Premium</h3>
+            </div>
+            <ul class="service-features">
+                <li>1 mois : 3 000 FCFA <button onclick="ajouterAuPanier('Abonnement 1 mois', 3000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>2 mois : 5 000 FCFA <button onclick="ajouterAuPanier('Abonnement 2 mois', 5000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Illimité : 16 000 FCFA <button onclick="ajouterAuPanier('Abonnement Illimité', 16000)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- VPN & Fichiers -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="service-title">🔐 VPN & Fichiers</h3>
+            </div>
+            <ul class="service-features">
+                <li>1 semaine : 500 FCFA <button onclick="ajouterAuPanier('VPN 1 semaine', 500)" class="btn-panier">Ajouter au panier</button></li>
+                <li>2 semaines : 1 000 FCFA <button onclick="ajouterAuPanier('VPN 2 semaines', 1000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>1 mois : 1 500 FCFA <button onclick="ajouterAuPanier('VPN 1 mois', 1500)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Déblocage d'applications -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-unlock-alt"></i></div>
+                <h3 class="service-title">⭐ Déblocage d'Applications</h3>
+            </div>
+            <ul class="service-features">
+                <li>Canva Premium : 3 000 FCFA <button onclick="ajouterAuPanier('Canva Premium', 3000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>CapCut Premium : 2 500 FCFA <button onclick="ajouterAuPanier('CapCut Premium', 2500)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Telegram Premium : 2 500 FCFA <button onclick="ajouterAuPanier('Telegram Premium', 2500)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Spotify Premium : 2 000 FCFA <button onclick="ajouterAuPanier('Spotify Premium', 2000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Autres applications sur demande <button onclick="ajouterAuPanier('Autres applications', 0)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Blocage de publicités -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-ad"></i></div>
+                <h3 class="service-title">🚫 Blocage de Publicités</h3>
+            </div>
+            <p class="service-price">2 000 FCFA <button onclick="ajouterAuPanier('Blocage de Publicités', 2000)" class="btn-panier">Ajouter au panier</button></p>
+        </div>
+
+        <!-- VPS & Formations -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-server"></i></div>
+                <h3 class="service-title">🖥️ VPS & Formations</h3>
+            </div>
+            <ul class="service-features">
+                <li>Formation complète VPS : 17 500 FCFA <button onclick="ajouterAuPanier('Formation VPS complète', 17500)" class="btn-panier">Ajouter au panier</button></li>
+                <li>1 mois : 1 000 FCFA <button onclick="ajouterAuPanier('VPS 1 mois', 1000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Illimité : 6 000 FCFA <button onclick="ajouterAuPanier('VPS Illimité', 6000)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Google VEO 3 & Création Visuelle -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-robot"></i></div>
+                <h3 class="service-title">🎥 Formation Google VEO 3 & Création Visuelle</h3>
+            </div>
+            <ul class="service-features">
+                <li>Pack complet : 7 500 FCFA <button onclick="ajouterAuPanier('Pack Google VEO 3 & Visuel', 7500)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Cartes bancaires et numéros virtuels -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-credit-card"></i></div>
+                <h3 class="service-title">💳 Services Numériques Avancés</h3>
+            </div>
+            <ul class="service-features">
+                <li>Carte bancaire virtuelle : 6 000 FCFA <button onclick="ajouterAuPanier('Carte bancaire virtuelle', 6000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Numéro virtuel (SMS / vérification) : 7 000 FCFA <button onclick="ajouterAuPanier('Numéro virtuel', 7000)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Création de sites web -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-globe"></i></div>
+                <h3 class="service-title">🌐 Création de Sites Web</h3>
+            </div>
+            <ul class="service-features">
+                <li>Site vitrine / service digital : 10 000 FCFA <button onclick="ajouterAuPanier('Site Web', 10000)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+
+        <!-- Autres services digitaux -->
+        <div class="service-card fade-in-up">
+            <div class="service-header">
+                <div class="service-icon"><i class="fas fa-tools"></i></div>
+                <h3 class="service-title">🛠️ Autres Services Digitaux</h3>
+            </div>
+            <ul class="service-features">
+                <li>Monétisation TikTok : 3 000 FCFA <button onclick="ajouterAuPanier('Monétisation TikTok', 3000)" class="btn-panier">Ajouter au panier</button></li>
+                <li>Monétisation YouTube : 5 000 FCFA <button onclick="ajouterAuPanier('Monétisation YouTube', 5000)" class="btn-panier">Ajouter au panier</button></li>
+            </ul>
+        </div>
+    </div>
+</section>
