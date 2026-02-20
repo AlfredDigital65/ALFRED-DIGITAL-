@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALFRED SERVICE | Solutions Digitales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .service-card { transition: all 0.3s ease; background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        .service-card:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        #cart-sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-add { background: linear-gradient(90deg, #0ea5e9, #6366f1); transition: transform 0.2s; }
+        .btn-add:active { transform: scale(0.95); }
+        .flag-container { font-size: 1.2rem; letter-spacing: 4px; }
+    </style>
+</head>
+<body class="relative">
+
+    <div onclick="toggleCart()" class="fixed bottom-6 right-6 z-50 cursor-pointer bg-sky-500 p-4 rounded-full shadow-lg hover:scale-110 transition flex items-center justify-center">
+        <i class="fas fa-shopping-basket text-2xl"></i>
+        <span id="cart-count" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md">0</span>
+    </div>
+
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-slate-900 z-[60] shadow-2xl translate-x-full border-l border-gray-800 p-6 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
+            <h2 class="text-2xl font-bold flex items-center gap-2"><i class="fas fa-shopping-cart text-sky-400"></i> Mon Panier</h2>
+            <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+        </div>
+        <div id="cart-items" class="space-y-4 mb-8">
+            <p class="text-gray-500 text-center italic mt-10">Votre panier est encore vide...</p>
+        </div>
+        <div class="border-t border-gray-800 pt-6">
+            <div class="flex justify-between text-xl font-bold mb-6">
+                <span>Total à payer :</span>
+                <span id="cart-total" class="text-sky-400 font-black">0 FCFA</span>
+            </div>
+            <button onclick="sendWhatsApp()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-green-900/20">
+                <i class="fab fa-whatsapp text-2xl"></i> COMMANDER SUR WHATSAPP
+            </button>
+        </div>
+    </div>
+
+    <header class="py-16 px-6 text-center">
+        <div class="mb-4 inline-block px-4 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-sm font-bold tracking-widest uppercase">Expertise Digitale</div>
+        <h1 class="text-5xl md:text-6xl font-black mb-4 tracking-tighter gradient-text">ALFRED SERVICE</h1>
+        <p class="text-gray-400 max-w-xl mx-auto text-lg">Abonnements Premium, VPN, Formations et Services Numériques sur mesure.</p>
+    </header>
+
+    <main class="container mx-auto px-4 pb-32">
+
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3"><i class="fas fa-film text-red-500"></i> Cinéma & IPTV Premium</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="service-card p-6 rounded-2xl relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 opacity-10 text-6xl"><i class="fas fa-tv"></i></div>
+                    <h3 class="font-bold text-xl mb-4">IPTV Monde + Netflix</h3>
+                    <div class="space-y-3">
+                        <button onclick="addToCart('IPTV/Netflix (1 Mois)', 3000)" class="w-full flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-white/5 hover:border-sky-500 transition">
+                            <span>1 Mois</span> <span class="font-bold text-sky-400">3 000 F <i class="fas fa-plus-circle ml-1"></i></span>
+                        </button>
+                        <button onclick="addToCart('IPTV/Netflix (2 Mois)', 5000)" class="w-full flex justify-between items-center bg-slate-800/50 p-3 rounded-lg border border-white/5 hover:border-sky-500 transition">
+                            <span>2 Mois</span> <span class="font-bold text-sky-400">5 000 F <i class="fas fa-plus-circle ml-1"></i></span>
+                        </button>
+                        <button onclick="addToCart('IPTV/Netflix (Illimité)', 16000)" class="w-full flex justify-between items-center bg-sky-500/20 p-3 rounded-lg border border-sky-500/30 hover:bg-sky-500/30 transition">
+                            <span class="font-bold">Illimité</span> <span class="font-bold text-yellow-400">16 000 F <i class="fas fa-crown ml-1"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="service-card p-6 rounded-2xl">
+                    <h3 class="font-bold text-xl mb-2 text-purple-400"><i class="fas fa-user-shield mr-2"></i> VPN & Configs</h3>
+                    <p class="text-xs text-gray-400 mb-4 italic">NetMod, ZI VPN, HTTP Injector, SSC...</p>
+                    <div class="flag-container mb-4 text-center py-2 bg-slate-900/50 rounded-lg">
+                        🇧🇫 🇧🇯 🇨🇬 🇨🇮 🇨🇲 🇲🇬 🇬🇭 🇬🇳
+                    </div>
+                    <div class="space-y-3">
+                        <button onclick="addToCart('VPN Config (1 Semaine)', 500)" class="w-full flex justify-between items-center bg-slate-800/50 p-3 rounded-lg hover:border-purple-500 border border-transparent transition">
+                            <span>1 Semaine</span> <span class="font-bold">500 F</span>
+                        </button>
+                        <button onclick="addToCart('VPN Config (2 Semaines)', 1000)" class="w-full flex justify-between items-center bg-slate-800/50 p-3 rounded-lg hover:border-purple-500 border border-transparent transition">
+                            <span>2 Semaines</span> <span class="font-bold">1 000 F</span>
+                        </button>
+                        <button onclick="addToCart('VPN Config (1 Mois)', 1500)" class="w-full py-3 btn-add rounded-lg font-bold">Acheter : 1 500 FCFA</button>
+                    </div>
+                </div>
+
+                <div class="service-card p-6 rounded-2xl">
+                    <h3 class="font-bold text-xl mb-4 text-pink-400"><i class="fas fa-star mr-2"></i> Apps Premium</h3>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button onclick="addToCart('Canva Premium', 3000)" class="flex justify-between p-3 bg-slate-800/50 rounded-lg text-sm hover:bg-pink-500/10 transition">
+                            <span>Canva Premium</span> <span class="font-bold">3 000 F</span>
+                        </button>
+                        <button onclick="addToCart('CapCut Premium', 2500)" class="flex justify-between p-3 bg-slate-800/50 rounded-lg text-sm hover:bg-pink-500/10 transition">
+                            <span>CapCut Premium</span> <span class="font-bold">2 500 F</span>
+                        </button>
+                        <button onclick="addToCart('Telegram Premium', 2500)" class="flex justify-between p-3 bg-slate-800/50 rounded-lg text-sm hover:bg-pink-500/10 transition">
+                            <span>Telegram Premium</span> <span class="font-bold">2 500 F</span>
+                        </button>
+                        <button onclick="addToCart('Spotify Premium', 2000)" class="flex justify-between p-3 bg-slate-800/50 rounded-lg text-sm hover:bg-pink-500/10 transition">
+                            <span>Spotify Premium</span> <span class="font-bold">2 000 F</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 text-emerald-400"><i class="fas fa-rocket"></i> Formations & Business</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="service-card p-8 rounded-3xl border-l-4 border-emerald-500">
+                    <h3 class="text-2xl font-black mb-2">Formation Google VEO 3</h3>
+                    <p class="text-gray-400 mb-6 italic">Prompts pro, création visuelle & affiches professionnelles.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-3xl font-bold">7 500 FCFA</span>
+                        <button onclick="addToCart('Formation Google VEO 3', 7500)" class="btn-add px-6 py-3 rounded-xl font-bold shadow-lg">S'inscrire</button>
+                    </div>
+                </div>
+                <div class="service-card p-8 rounded-3xl border-l-4 border-white">
+                    <h3 class="text-2xl font-black mb-2 italic">Formation PASS TIKTOK</h3>
+                    <p class="text-gray-400 mb-6 text-sm">Configuration, optimisation et monétisation complète.</p>
+                    <div class="flex gap-4">
+                        <button onclick="addToCart('Pass TikTok (1 Mois)', 1000)" class="flex-1 bg-slate-800 p-4 rounded-xl text-center hover:bg-slate-700">
+                            <p class="text-xs uppercase text-gray-400">1 Mois</p>
+                            <p class="text-xl font-bold">1 000 F</p>
+                        </button>
+                        <button onclick="addToCart('Pass TikTok (Illimité)', 6000)" class="flex-1 bg-white text-black p-4 rounded-xl text-center hover:bg-gray-200 transition">
+                            <p class="text-xs uppercase font-bold">Illimité</p>
+                            <p class="text-xl font-bold">6 000 F</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-3 text-orange-400"><i class="fas fa-tools"></i> Services Techniques</h2>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+            <button onclick="addToCart('Création Site Web', 10000)" class="service-card p-6 rounded-2xl text-center group">
+                <i class="fas fa-globe text-3xl mb-3 text-sky-400 group-hover:scale-110 transition"></i>
+                <h4 class="font-bold text-sm">Site Web Pro</h4>
+                <p class="text-orange-400 font-bold">10 000 F</p>
+            </button>
+            <button onclick="addToCart('Carte Bancaire Virtuelle', 6000)" class="service-card p-6 rounded-2xl text-center group">
+                <i class="fas fa-credit-card text-3xl mb-3 text-emerald-400 group-hover:scale-110 transition"></i>
+                <h4 class="font-bold text-sm">Carte Virtuelle</h4>
+                <p class="text-orange-400 font-bold">6 000 F</p>
+            </button>
+            <button onclick="addToCart('Numéro Virtuel SMS', 7000)" class="service-card p-6 rounded-2xl text-center group">
+                <i class="fas fa-comment-dots text-3xl mb-3 text-purple-400 group-hover:scale-110 transition"></i>
+                <h4 class="font-bold text-sm">Numéro Virtuel</h4>
+                <p class="text-orange-400 font-bold">7 000 F</p>
+            </button>
+            <button onclick="addToCart('Blocage Publicités', 2000)" class="service-card p-6 rounded-2xl text-center group">
+                <i class="fas fa-ad text-3xl mb-3 text-red-400 group-hover:scale-110 transition"></i>
+                <h4 class="font-bold text-sm">Stop Publicités</h4>
+                <p class="text-orange-400 font-bold">2 000 F</p>
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="bg-slate-900 border-t border-gray-800 py-16 px-6">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-black mb-8">CONTACTER ALFRED</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
+                <div class="p-6 bg-slate-800/30 rounded-2xl">
+                    <i class="fas fa-phone-alt text-sky-400 text-2xl mb-3"></i>
+                    <p class="font-bold">+226 65 39 78 42</p>
+                </div>
+                <div class="p-6 bg-slate-800/30 rounded-2xl border border-sky-500/20 shadow-xl">
+                    <i class="fas fa-envelope text-sky-400 text-2xl mb-3"></i>
+                    <p class="font-bold text-sm">digitalalfred1@gmail.com</p>
+                </div>
+                <div class="p-6 bg-slate-800/30 rounded-2xl">
+                    <i class="fas fa-map-marker-alt text-sky-400 text-2xl mb-3"></i>
+                    <p class="font-bold">Services en Ligne</p>
+                </div>
+            </div>
+            <p class="text-gray-500 text-xs tracking-widest uppercase">© 2026 Alfred Service | Design Moderne & Rapide</p>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+        let total = 0;
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cart-sidebar');
+            sidebar.classList.toggle('translate-x-full');
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            
+            // Animation sur le panier
+            const btn = document.querySelector('.fixed.bottom-6');
+            btn.classList.add('scale-125', 'bg-emerald-500');
+            setTimeout(() => btn.classList.remove('scale-125', 'bg-emerald-500'), 300);
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cart-items');
+            const cartCount = document.getElementById('cart-count');
+            const cartTotal = document.getElementById('cart-total');
+            
+            cartItems.innerHTML = '';
+            total = 0;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="text-gray-500 text-center italic mt-10">Votre panier est encore vide...</p>';
+                cartCount.classList.add('hidden');
+            } else {
+                cartCount.classList.remove('hidden');
+                cartCount.innerText = cart.length;
+                
+                cart.forEach((item, index) => {
+                    total += item.price;
+                    cartItems.innerHTML += `
+                        <div class="flex justify-between items-center bg-slate-800/80 p-4 rounded-xl border border-white/5 animate-slide-in">
+                            <div>
+                                <p class="font-bold text-sm">${item.name}</p>
+                                <p class="text-xs text-sky-400 font-bold">${item.price} FCFA</p>
+                            </div>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-200 text-xl font-bold p-2">&times;</button>
+                        </div>
+                    `;
+                });
+            }
+            cartTotal.innerText = total.toLocaleString('fr-FR') + ' FCFA';
+        }
+
+        function sendWhatsApp() {
+            if (cart.length === 0) {
+                alert("Votre panier est vide ! Veuillez choisir un service.");
+                return;
+            }
+            
+            let message = "*COMMANDE ALFRED SERVICE*\n";
+            message += "---------------------------\n";
+            cart.forEach((item, index) => {
+                message += `✅ ${item.name} : ${item.price} FCFA\n`;
+            });
+            message += "---------------------------\n";
+            message += `💰 *TOTAL À PAYER : ${total} FCFA*`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const phoneNumber = "22665397842";
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+    </script>
+</body>
+</html>
