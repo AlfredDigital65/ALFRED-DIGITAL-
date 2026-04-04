@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAMAS SERVICE • Solutions numériques</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #0b0710; /* fallback deep */
+            color: #f0eaff;
+            line-height: 1.5;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* fond violet dynamique 3D / particules */
+        .dynamic-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, #3c096c, #10002b 70%);
+            overflow: hidden;
+        }
+
+        .dynamic-bg::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: repeating-linear-gradient(45deg,
+                rgba(156, 39, 176, 0.1) 0px,
+                rgba(98, 0, 234, 0.1) 2px,
+                transparent 2px,
+                transparent 10px);
+            animation: bgMove 36s linear infinite;
+            opacity: 0.35;
+        }
+
+        .dynamic-bg::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 70% 60%, #b624ff20, transparent 40%),
+                        radial-gradient(circle at 20% 80%, #7b2cbf40, transparent 50%);
+            filter: blur(40px);
+        }
+
+        @keyframes bgMove {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(3deg) scale(1.05); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(180, 130, 255, 0.2);
+            border-radius: 50%;
+            filter: blur(12px);
+            animation: float 22s infinite alternate ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+            100% { transform: translate(40px, -60px) scale(1.3); opacity: 0.6; }
+        }
+
+        /* glassmorphisme + couleurs modernes */
+        :root {
+            --primary-dark: #6a0dad;    /* violet profond */
+            --primary-light: #b47aff;
+            --accent-glow: #d4a5ff;
+            --card-bg: rgba(30, 15, 55, 0.7);
+            --border-glass: rgba(255, 215, 255, 0.15);
+            --text-light: #f3e8ff;
+            --whatsapp: #25D366;
+            --whatsapp-dark: #128C7E;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* header + nav glass */
+        header {
+            background: rgba(45, 15, 75, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-glass);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #b14eff, #6f2da8);
+            border-radius: 40% 60% 40% 60% / 50% 40% 60% 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px #b77eff;
+            border: 2px solid rgba(255,255,240,0.4);
+        }
+
+        .logo-main {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(130deg, #f2dbff, #d9adff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.2;
+        }
+
+        .logo-sub {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: #ccb2ff;
+        }
+
+        .search-cart {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            border-radius: 60px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(200, 150, 255, 0.3);
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            color: white;
+            width: 230px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .search-bar input::placeholder {
+            color: #cbb5f0;
+        }
+
+        .search-bar button {
+            background: rgba(170, 90, 255, 0.5);
+            border: none;
+            padding: 0 18px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .search-bar button:hover {
+            background: #9f4eff;
+        }
+
+        .cart-icon, .floating-cart {
+            position: relative;
+            font-size: 1.6rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cart-icon:hover, .floating-cart:hover { color: var(--accent-glow); transform: scale(1.1); }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: #ff44b4;
+            color: #19002e;
+            font-weight: bold;
+            font-size: 0.7rem;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px hotpink;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Navigation desktop */
+        nav {
+            background: rgba(25, 5, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            gap: 28px;
+            padding: 10px 0;
+        }
+
+        .nav-menu a {
+            color: #f0deff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(170, 90, 255, 0.5);
+            color: white;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #2a1240dd;
+            backdrop-filter: blur(8px);
+            min-width: 200px;
+            border-radius: 20px;
+            border: 1px solid #9f5eff;
+            top: 30px;
+            left: 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            color: #f0e2ff;
+            padding: 12px 18px;
+        }
+
+        /* mobile menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -340px;
+            width: 300px;
+            height: 100vh;
+            background: #210e3b;
+            backdrop-filter: blur(20px);
+            z-index: 2001;
+            padding: 30px 20px;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border-left: 1px solid #b77aff;
+        }
+        .mobile-menu.active { right: 0; }
+        .overlay.active { display: block; }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1999;
+        }
+
+        /* hero */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(130deg, #fff4d0, #e4b9ff, #c789ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px #ae5eff;
+        }
+        .hero p { font-size: 1.3rem; color: #d6c2ff; max-width: 700px; margin: 20px auto; }
+
+        .btn {
+            background: #9d4eff;
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.2s;
+            box-shadow: 0 5px 20px #8d3eff;
+            cursor: pointer;
+        }
+        .btn:hover { background: #b367ff; transform: translateY(-3px); box-shadow: 0 10px 30px #b45eff; }
+        .btn-whatsapp { background: var(--whatsapp); box-shadow: 0 5px 15px #25d36680; }
+        .btn-whatsapp:hover { background: #20b859; }
+
+        /* cards */
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 60px 0 40px;
+            background: linear-gradient(145deg, #f0ceff, #f0a7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: 36px;
+            overflow: hidden;
+            transition: 0.3s;
+            box-shadow: 0 15px 35px -8px rgba(149, 0, 255, 0.4);
+        }
+        .service-card:hover { transform: translateY(-10px) scale(1.01); border-color: #c288ff; }
+
+        .service-icon {
+            background: #491b88;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #b27aff;
+        }
+        .service-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            border-radius: 30% 70% 40% 60% / 40% 40% 60% 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background: inherit;
+            box-shadow: 0 0 0 2px #f3deff;
+        }
+        .service-content { padding: 25px 20px; color: #f0e4ff; }
+        .service-content h3 { font-size: 1.5rem; margin-bottom: 12px; }
+
+        .service-rating { display: flex; gap: 10px; align-items: center; margin: 10px 0; }
+        .service-stars { color: #ffd966; }
+        .service-price { font-size: 1.3rem; color: #f2c2ff; margin: 12px 0; }
+
+        /* Mise en forme tarifs internet */
+        .tarif-block {
+            background: #2f1250a0;
+            border-radius: 24px;
+            padding: 16px;
+            margin: 18px 0;
+            border-left: 5px solid #d9a3ff;
+        }
+        .tarif-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #b07bda; }
+        .tarif-row span:first-child { font-weight: 600; color: #f0cdff; }
+        .tarif-row span:last-child { color: #ffdb9d; font-weight: 700; }
+        .operateurs { display: flex; gap: 15px; margin-top: 12px; font-size: 1.1rem; }
+        .operateurs i { margin-right: 6px; }
+
+        .service-actions { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+        .service-actions .btn { flex: 1; text-align: center; padding: 10px; }
+
+        .new-badge {
+            background: linear-gradient(135deg, #ff44b4, #ff9900);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.8; transform: scale(1); }
+        }
+
+        /* reviews */
+        .reviews {
+            background: rgba(15, 5, 30, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 60px 60px 0 0;
+            padding: 60px 0;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .review-card {
+            background: rgba(50, 20, 80, 0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 30px;
+            padding: 24px;
+            border: 1px solid #a169e0;
+        }
+
+        /* whatsapp group */
+        .whatsapp-group {
+            background: linear-gradient(125deg, #30084d, #0e002b);
+            padding: 70px 20px;
+            text-align: center;
+            border-radius: 80px 80px 0 0;
+        }
+        .group-benefits { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin: 40px 0; }
+
+        /* footer */
+        footer {
+            background: #050014;
+            padding: 50px 0 20px;
+            border-top: 2px solid #5a2a9b;
+        }
+
+        /* modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: #281b42;
+            border-radius: 50px;
+            padding: 35px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid #c492ff;
+        }
+
+        /* responsive */
+        @media (max-width: 800px) {
+            .nav-menu { display: none; }
+            .menu-toggle { display: block; }
+            .search-bar input { width: 150px; }
+            .hero h1 { font-size: 2.6rem; }
+            .logo-main { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dynamic-bg" id="dynamic-bg">
+        <div class="particle" style="width:400px;height:400px;top:10%;left:-5%;background:#c05eff20;filter:blur(60px);"></div>
+        <div class="particle" style="width:500px;height:500px;bottom:0;right:0;background:#7d3cff30;filter:blur(80px);"></div>
+    </div>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <div class="logo-img">DS</div>
+                <div class="logo-text">
+                    <div class="logo-main">ALFRED TECH </div>
+                    <div class="logo-sub"></div>
+                </div>
+            </div>
+            <div class="search-cart">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Rechercher...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart-icon" id="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></div>
+                <div class="menu-toggle" id="menu-toggle"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="#accueil">Accueil</a></li>
+                <li class="dropdown">
+                    <a href="#">Tableau de bord <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#" id="dashboard-link">Mon panier</a>
+                        <a href="#" data-page="support">Support</a>
+                        <a href="#" data-page="aide">Aide</a>
+                        <a href="#" data-page="a-propos">À propos</a>
+                    </div>
+                </li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header" style="display:flex; justify-content:space-between;"><h3>Menu</h3><div class="close-menu" id="close-menu"><i class="fas fa-times"></i></div></div>
+        <ul class="mobile-menu-items">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#" id="mobile-dashboard-link">Panier</a></li>
+            <li><a href="#" data-page="support">Support</a></li>
+            <li><a href="#" data-page="aide">Aide</a></li>
+            <li><a href="#" data-page="a-propos">À propos</a></li>
+        </ul>
+    </div>
+
+    <section class="hero" id="accueil">
+        <div class="container hero-content">
+            <h1>DAMAS SERVICE</h1>
+            <p>Internet gratuit illimité • Monétisation réseaux • Bots • Solutions digitales</p>
+            <a href="#services" class="btn">Explorer</a>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">⚡ Services premium ⚡</h2>
+            <div class="services-grid" id="services-container"></div>
+        </div>
+    </section>
+
+    <!-- Pages info -->
+    <div class="container">
+        <div id="support" class="info-page" style="display:none; background: #2a184daa; border-radius: 50px; padding: 40px; margin: 30px 0;">
+            <h2>Support</h2>
+            <p><i class="fas fa-phone-alt"></i> +226 65 39 78 42</p>
+            <p><i class="fas fa-envelope"></i> alfreddigital1@gmail.com</p>
+            <p>Réponse sous 2h en moyenne.</p>
+        </div>
+        <div id="aide" class="info-page" style="display:none; background: #2a184daa; border-radius: 50px; padding: 40px;">
+            <h2>Aide & FAQ</h2>
+            <p>Comment configurer mon VPN ? · Paiements · Délais</p>
+        </div>
+        <div id="a-propos" class="info-page" style="display:none; background: #2a184daa; border-radius: 50px; padding: 40px;">
+            <h2>À propos</h2>
+            <p>ALFRED TECH, référence africaine des solutions numériques depuis 2020.</p>
+        </div>
+    </div>
+
+    <!-- WhatsApp Group -->
+    <section class="whatsapp-group">
+        <div class="container">
+            <h2 style="font-size:2.5rem;">🔥 Rejoins la communauté WhatsApp</h2>
+            <p>+600 membres · astuces exclusives · offres privées</p>
+            <div class="group-benefits">
+                <div class="benefit-item"><i class="fas fa-users"></i><h4>Entraide</h4></div>
+                <div class="benefit-item"><i class="fas fa-gem"></i><h4>Bons plans</h4></div>
+                <div class="benefit-item"><i class="fas fa-headset"></i><h4>Support prioritaire</h4></div>
+            </div>
+            <a href="https://chat.whatsapp.com/CLSbCLfY6t24bpORzQyCn3?mode=gi_t" class="btn btn-whatsapp" style="font-size:1.3rem;" target="_blank"><i class="fab fa-whatsapp"></i> Rejoindre maintenant</a>
+        </div>
+    </section>
+
+    <!-- Avis clients -->
+    <section class="reviews">
+        <div class="container">
+            <h2 class="section-title">💬 Avis clients</h2>
+            <div class="reviews-grid" id="reviews-container"></div>
+            <div class="add-review" style="margin-top:50px;">
+                <h3>Donne ton avis</h3>
+                <form id="review-form" style="display:flex; flex-direction:column; gap:15px; max-width:600px;">
+                    <input type="text" id="review-name" placeholder="Ton nom" required style="padding:12px;border-radius:60px;border:none;">
+                    <select id="review-rating" style="padding:12px;border-radius:60px;">
+                        <option value="5">★★★★★</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="3">★★★☆☆</option>
+                    </select>
+                    <textarea id="review-text" placeholder="Message..." rows="3" style="padding:12px;border-radius:30px;"></textarea>
+                    <button class="btn" type="submit">Publier</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container footer-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;">
+            <div><h3>DAMAS SERVICE</h3><p>+226 51 37 79 44<br>dindanedamas@gmail.com<br>OUAGADOUGOU</p></div>
+            <div><h3>Liens</h3><a href="#">Services</a><br><a href="#">Communauté WhatsApp</a></div>
+        </div>
+        <div class="container footer-bottom"> ©  2026 ALFRED  TECH </div>
+    </footer>
+
+    <div class="floating-cart" id="floating-cart"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></div>
+
+    <!-- Modal panier -->
+    <div class="modal" id="dashboard-modal">
+        <div class="modal-content">
+            <span class="close-modal" style="float:right;font-size:2rem;cursor:pointer;">&times;</span>
+            <h2>📦 Votre panier</h2>
+            <div id="dashboard-cart" style="min-height:100px;"></div>
+            <div id="dashboard-total" style="font-size:1.6rem;margin:20px 0;">Total: 0 F</div>
+            <a href="#" class="btn btn-whatsapp" id="dashboard-order-btn">Commander WhatsApp</a>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==========  DONNÉES ==========
+            const services = [
+                {   // 1. INTERNET GRATUIT ILLIMITÉ
+                    id: 1,
+                    name: "INTERNET GRATUIT ILLIMITÉ",
+                    logo: "🌐",
+                    logoBg: "linear-gradient(145deg, #5f2bbf, #9922ff)",
+                    icon: "fas fa-wifi",
+                    rating: 4.9,
+                    reviewCount: 312,
+                    operateurs: ["Orange", "Moov", "MTN"],
+                    tarifs: [
+                        { duree: "1 semaine", price: 500 },
+                        { duree: "2 semaines", price: 1000 },
+                        { duree: "1 mois", price: 1500 }
+                    ],
+                    description: "Profitez d'une connexion ultra rapide et illimitée. Forfaits valables sur tous les réseaux (Orange, Moov, MTN)."
+                },
+                {   // 2. NOUVEAU : Transformé vos Pass Tiktok en Forfait Réel
+                    id: 7,
+                    name: "Transformé vos Pass Tiktok en Forfait Réel",
+                    logo: "🎵",
+                    logoBg: "linear-gradient(145deg, #ff0050, #00f2ea)",
+                    icon: "fab fa-tiktok",
+                    rating: 5.0,
+                    reviewCount: 45,
+                    operateurs: ["MOOV-AFRICA 🇧🇫"],
+                    tarifs: [
+                        { duree: "2 semaines", price: 500 },
+                        { duree: "1 mois", price: 1000 }
+                    ],
+                    description: "Convertissez vos passes TikTok en forfait réel MOOV-AFRICA. Nouveau service exclusif !",
+                    new: true
+                },
+                {   // 3. Monétisation TikTok + Facebook, Instagram, YouTube
+                    id: 2,
+                    name: "Monétisation Réseaux",
+                    logo: "📈",
+                    logoBg: "linear-gradient(145deg, #e1306c, #833ab4)",
+                    icon: "fas fa-chart-simple",
+                    rating: 4.8,
+                    reviewCount: 167,
+                    price: "2000 F (Tiktok; Facebook; Instagram;  Youtube)",
+                    description: "Stratégies complètes pour monétiser TikTok, Facebook, Instagram et YouTube."
+                },
+                {
+                    id: 3,
+                    name: "Bot WhatsApp",
+                    logo: "🤖",
+                    logoBg: "linear-gradient(145deg, #25D366, #075E54)",
+                    icon: "fab fa-whatsapp",
+                    rating: 4.7,
+                    reviewCount: 203,
+                    price: "À partir de 2500 F"
+                },
+                {
+                    id: 4,
+                    name: "Compte PayPal vérifié",
+                    logo: "PP",
+                    logoBg: "linear-gradient(145deg, #003087, #009CDE)",
+                    icon: "fab fa-paypal",
+                    rating: 4.9,
+                    reviewCount: 156,
+                    price: "2500 F"
+                },
+                {
+                    id: 5,
+                    name: "Formation Crypto & Trading",
+                    logo: "�",
+                    logoBg: "linear-gradient(145deg, #F7931A, #f0b90b)",
+                    icon: "fas fa-coins",
+                    rating: 4.6,
+                    reviewCount: 98,
+                    price: "4000 F (formation complète)"
+                },
+                {
+                    id: 6,
+                    name: "Canal+ / TV illimité",
+                    logo: "TV",
+                    logoBg: "linear-gradient(145deg, #E50914, #B81D24)",
+                    icon: "fas fa-tv",
+                    rating: 4.8,
+                    reviewCount: 273,
+                    price: "2500 F / mois"
+                }
+            ];
+
+            const reviews = [
+                {
+                    name: "Koffi Amoin",
+                    avatar: "https://randomuser.me/api/portraits/women/91.jpg",
+                    time: "2h",
+                    rating: 5,
+                    text: "Le service de transformation des passes TikTok en forfait réel MOOV fonctionne parfaitement !"
+                },
+                {
+                    name: "Konan Yao",
+                    avatar: "https://randomuser.me/api/portraits/men/92.jpg",
+                    time: "hier",
+                    rating: 5,
+                    text: "Internet gratuit impeccable chez Orange et Moov, merci Damas ! Je recommande à tous mes amis à BOBO."
+                },
+                {
+                    name: "Awa Coulibaly",
+                    avatar: "https://randomuser.me/api/portraits/women/93.jpg",
+                    time: "3j",
+                    rating: 5,
+                    text: "Le groupe WhatsApp est super actif, on s'entraide entre Ivoiriens. Les bons plans sont top !"
+                },
+                {
+                    name: "Bamba Moussa",
+                    avatar: "https://randomuser.me/api/portraits/men/94.jpg",
+                    time: "5j",
+                    rating: 4,
+                    text: "Monétisation Tiktok a marché pour moi et j'ai commencé à gagner de l'argent en moins de 4 mois"
+                }
+            ];
+
+            let cart = [];
+
+            // Rendu services
+            const container = document.getElementById('services-container');
+            function renderServices() {
+                container.innerHTML = services.map(s => {
+                    let pricingHtml = '';
+                    if (s.tarifs) {
+                        pricingHtml = `<div class="tarif-block">
+                            ${s.tarifs.map(t => `<div class="tarif-row"><span>${t.duree}</span><span>${t.price} F</span></div>`).join('')}
+                            <div class="operateurs">📱 ${s.operateurs?.map(op => `<span><i class="fas fa-sim-card"></i> ${op}</span>`).join(' • ')}</div>
+                        </div>`;
+                    } else {
+                        pricingHtml = `<div class="service-price">💰 ${s.price}</div>`;
+                    }
+
+                    const stars = '★'.repeat(Math.floor(s.rating)) + '☆'.repeat(5 - Math.floor(s.rating));
+                    const newBadge = s.new ? '<div class="new-badge">🔥 NOUVEAU</div>' : '';
+
+                    return `<div class="service-card">
+                        <div class="service-icon"><div class="service-logo" style="background:${s.logoBg}">${s.logo}</div><i class="${s.icon}"></i></div>
+                        <div class="service-content">
+                            ${newBadge}
+                            <h3>${s.name}</h3>
+                            <div class="service-rating"><span class="service-stars">${stars}</span> <span>${s.rating} (${s.reviewCount})</span></div>
+                            ${pricingHtml}
+                            <div class="service-actions">
+                                <button class="btn btn-add-cart" data-id="${s.id}"><i class="fas fa-cart-plus"></i> Ajouter</button>
+                                <button class="btn btn-whatsapp" data-id="${s.id}"><i class="fab fa-whatsapp"></i> Commander</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            renderServices();
+
+            function renderReviews() {
+                const revContainer = document.getElementById('reviews-container');
+                revContainer.innerHTML = reviews.map(r => `<div class="review-card">
+                    <div style="display:flex; gap:15px;"><img src="${r.avatar}" style="width:50px;height:50px;border-radius:50%;">
+                    <div><strong>${r.name}</strong> <div>${'★'.repeat(r.rating)}</div><small>${r.time}</small></div></div>
+                    <p>${r.text}</p>
+                </div>`).join('');
+            }
+            renderReviews();
+
+            function updateCartCount() { document.querySelectorAll('.cart-count').forEach(el => el.innerText = cart.length); }
+
+            function addToCart(id) {
+                const s = services.find(s => s.id === id);
+                if (!s) return;
+                if (s.tarifs) {
+                    // Pour le nouveau produit, prendre le tarif 2 semaines par défaut
+                    cart.push({ name: s.name + ' (2 semaines)', price: s.tarifs[0]?.price || 500 });
+                } else {
+                    cart.push({ name: s.name, price: parseInt(s.price.replace(/\D/g,'')) || 4000 });
+                }
+                updateCartCount();
+            }
+
+            document.addEventListener('click', e => {
+                if (e.target.closest('.btn-add-cart')) {
+                    const id = e.target.closest('.btn-add-cart').dataset.id;
+                    addToCart(parseInt(id));
+                }
+                if (e.target.closest('.btn-whatsapp')) {
+                    const id = e.target.closest('.btn-whatsapp').dataset.id;
+                    const service = services.find(s => s.id == id);
+                    if (service) {
+                        let msg = `Bonjour, je suis intéressé par : ${service.name}`;
+                        if (service.tarifs) msg += ` (forfaits disponibles)`;
+                        window.open(`https://wa.me/22665397842?text=${encodeURIComponent(msg)}`, '_blank');
+                    }
+                }
+            });
+
+            // Dashboard
+            const modal = document.getElementById('dashboard-modal');
+            document.getElementById('cart-icon').addEventListener('click', openDashboard);
+            document.getElementById('floating-cart').addEventListener('click', openDashboard);
+            document.querySelector('.close-modal').addEventListener('click', ()=>modal.style.display='none');
+
+            function openDashboard() {
+                const cartDiv = document.getElementById('dashboard-cart');
+                let total = 0;
+                if (cart.length===0) cartDiv.innerHTML = '<p>Panier vide</p>';
+                else {
+                    cartDiv.innerHTML = cart.map((item,i)=> {
+                        total += item.price;
+                        return `<div style="display:flex;justify-content:space-between;border-bottom:1px solid #c39eff;"><span>${item.name}</span> <span>${item.price} F <button class="remove-item" data-index="${i}" style="background:none;border:none;color:#ffa1d2;">🗑️</button></span></div>`;
+                    }).join('');
+                }
+                document.getElementById('dashboard-total').innerText = `Total: ${total} F`;
+                modal.style.display = 'flex';
+                document.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', function() {
+                    const idx = this.dataset.index;
+                    cart.splice(idx,1);
+                    updateCartCount();
+                    openDashboard();
+                }));
+            }
+
+            document.getElementById('dashboard-order-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!cart.length) return alert('Panier vide');
+                let msg = 'Bonjour, je commande :\n';
+                cart.forEach(i => msg += `- ${i.name} : ${i.price} F\n`);
+                window.open(`https://wa.me/22665397842?text=${encodeURIComponent(msg)}`, '_blank');
+            });
+
+            // mobile menu
+            document.getElementById('menu-toggle').addEventListener('click', ()=> {
+                document.getElementById('mobile-menu').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            });
+            document.getElementById('close-menu').addEventListener('click', ()=> {
+                document.getElementById('mobile-menu').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+            document.getElementById('overlay').addEventListener('click', ()=> {
+                document.getElementById('mobile-menu').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+
+            // pages info
+            document.querySelectorAll('[data-page]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelectorAll('.info-page').forEach(p => p.style.display='none');
+                    document.getElementById(link.dataset.page).style.display='block';
+                });
+            });
+
+            // review form
+            document.getElementById('review-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Merci pour ton avis ! (simulation)');
+            });
+        })();
+    </script>
+</body>
+    </html>
